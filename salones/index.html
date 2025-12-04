@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Asignación de Salones</title>
+    <link rel="stylesheet" href="css/sytle.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Sistema de Asignación Automática de Salones</h1>
+        <p>Procesamiento de horarios y asignación inteligente de espacios</p>
+    </header>
+
+    <main class="main-content">
+        <!-- Sección de carga de archivos -->
+        <section class="file-upload-section">
+            <div class="section-header">
+                <h2>Carga de Archivos CSV</h2>
+                <p>Selecciona exactamente 5 archivos CSV, uno por cada carrera</p>
+            </div>
+            <div class="file-upload-controls">
+                <input type="file" id="input-archivos" multiple accept=".csv" class="file-input">
+                <button id="btn-procesar" class="btn btn-primary">
+                    Procesar Archivos y Asignar Salones
+                    <span class="btn-icon">🔍</span>
+                </button>
+                <p class="help-text">Después del procesamiento, podrá buscar y seleccionar grupos prioritarios para asignación en el piso 1</p>
+            </div>
+        </section>
+
+        <!-- Indicador de carga -->
+        <div id="indicador-carga" class="loading-indicator">
+            <div class="spinner"></div>
+            <p>Procesando archivos y asignando salones...</p>
+        </div>
+
+        <!-- Contenedor de notificaciones -->
+        <div id="contenedor-notificaciones" class="notifications-container"></div>
+
+        <!-- Sección de reporte -->
+        <section class="report-section">
+            <div class="section-header">
+                <h2>Reporte de Asignación</h2>
+            </div>
+            <div id="contenedor-reporte" class="report-container"></div>
+        </section>
+
+        <!-- Sección de visualización de salones -->
+        <section class="visualization-section">
+            <div class="section-header">
+                <h2>Visualización de Salones</h2>
+                <div class="view-controls">
+                    <div class="search-salon-wrapper">
+                        <input type="text" id="buscador-salon" class="search-salon-input" placeholder="Buscar grupo en salones...">
+                        <div class="search-salon-icon">🔍</div>
+                    </div>
+                </div>
+            </div>
+            <div id="contenedor-salones" class="salons-container"></div>
+        </section>
+
+        <!-- Modal para selección de grupo prioritario -->
+        <div id="modal-grupo-prioritario" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Seleccionar Grupos Prioritarios</h3>
+                    <span class="modal-close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p>Seleccione los grupos que tendrán <strong>OBLIGATORIA</strong> asignación en los salones del 1er piso (cerca del elevador)</p>
+
+                    <!-- Grupos prioritarios guardados -->
+                    <div id="grupos-guardados-section" class="grupos-guardados-section" style="display: none;">
+                        <h4>Grupos Prioritarios Guardados:</h4>
+                        <div id="grupos-guardados-list" class="grupos-guardados-list">
+                            <!-- Los grupos guardados se mostrarán aquí -->
+                        </div>
+                    </div>
+
+                    <div class="search-container">
+                        <div class="search-input-wrapper">
+                            <input type="text" id="buscador-grupos" class="search-input" placeholder="Buscar grupo...">
+                            <div class="search-icon">🔍</div>
+                        </div>
+                    </div>
+                    <div id="grupos-prioritarios-container" class="grupos-container">
+                        <!-- Los checkboxes se agregarán dinámicamente aquí -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn-confirmar-prioridad" class="btn btn-primary">Guardar Grupos Prioritarios y Asignar</button>
+                    <button id="btn-cancelar-prioridad" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Sistema desarrollado para la gestión automática de asignación de salones universitarios</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
