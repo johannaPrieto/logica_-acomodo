@@ -70,11 +70,11 @@ class AsignadorAutomatico {
       }
     }
 
-    // Segunda pasada: asignación día por día para grupos sin asignar semanal
-    console.log("Segunda pasada: asignación día por día...");
+    // Segunda pasada: asignación consistente para grupos sin asignar semanal (mismo salón para todos los días)
+    console.log("Segunda pasada: asignación consistente...");
     for (const { grupoId, grupo, bloquesNecesarios, diasGrupo } of gruposSinAsignar) {
-      console.log(`Intentando asignación día por día para grupo ${grupoId}`);
-      this.asignarSalonDiaPorDia(grupo, bloquesNecesarios);
+      console.log(`Intentando asignación consistente para grupo ${grupoId}`);
+      this.asignarSalonConsistente(grupo, bloquesNecesarios);
     }
 
     console.log("Asignación de salones por grupo completada");
@@ -221,67 +221,29 @@ class AsignadorAutomatico {
     }
   }
 
-  // Asignar salón día por día como estrategia de fallback
-  asignarSalonDiaPorDia(grupo, bloquesNecesarios) {
-    const asignacionesDiaPorDia = [];
+  // Asignar salón consistente para todos los días del grupo como estrategia de fallback
+  asignarSalonConsistente(grupo, bloquesNecesarios) {
+    // Buscar salón disponible para TODOS los bloques del grupo
+    const salon = this.buscarSalonDisponibleParaGrupo(grupo, bloquesNecesarios);
 
-    for (const bloqueInfo of bloquesNecesarios) {
-      const { dia, bloque, horario } = bloqueInfo;
+    if (salon) {
+      console.log(`Asignando salón consistente ${salon.id} al grupo ${grupo.id} para todos los días`);
+      this.asignarSalonAGrupo(grupo, salon, bloquesNecesarios);
+    } else {
+      console.error(`No se pudo asignar salón consistente para grupo ${grupo.id}`);
 
-      // Buscar salón disponible solo para este día
-      const salonDia = this.buscarSalonDisponibleParaGrupo(grupo, [bloqueInfo]);
-
-      if (salonDia) {
-        console.log(`Asignando salón ${salonDia.id} al grupo ${grupo.id} para ${dia}`);
-
-        // Asignar clases de este día
-        const clave = `${grupo.id}-${dia}`;
-        const clasesGrupoDia = this.sistema.clasesPorGrupoDia.get(clave) || [];
-
-        clasesGrupoDia.forEach(clase => {
-          clase.salonActual = salonDia.id;
-          clase.edificioActual = salonDia.edificio;
-
-          this.sistema.asignaciones.push({
-            clase,
-            salon: salonDia,
-            bloque: bloque.nombre,
-            mensaje: `Asignado día por día: ${clase.nombreAsignatura} en ${salonDia.id} (${bloque.nombre})`
-          });
-        });
-
-        // Ocupar el salón
-        salonDia.agregarHorarioOcupado(horario);
-
-        if (!salonDia.asignacionesBloques) {
-          salonDia.asignacionesBloques = [];
-        }
-        salonDia.asignacionesBloques.push({
-          grupoId: grupo.id,
-          dia,
-          bloque: bloque.nombre,
-          horario
-        });
-
-        asignacionesDiaPorDia.push({ dia, salon: salonDia.id });
-      } else {
-        console.error(`No se pudo asignar salón para grupo ${grupo.id} el día ${dia}`);
-
-        // Registrar error para las clases de este día
-        const clave = `${grupo.id}-${dia}`;
+      // Registrar error para todas las clases de los días
+      for (const bloqueInfo of bloquesNecesarios) {
+        const clave = `${grupo.id}-${bloqueInfo.dia}`;
         const clasesGrupoDia = this.sistema.clasesPorGrupoDia.get(clave) || [];
 
         clasesGrupoDia.forEach(clase => {
           this.sistema.errores.push({
             clase,
-            mensaje: `No hay salones disponibles para el día ${dia}`
+            mensaje: `No hay salones disponibles para el grupo en todos los días`
           });
         });
       }
-    }
-
-    if (asignacionesDiaPorDia.length > 0) {
-      console.log(`Grupo ${grupo.id} asignado día por día: ${asignacionesDiaPorDia.map(a => `${a.dia}:${a.salon}`).join(', ')}`);
     }
   }
 
