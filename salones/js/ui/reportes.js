@@ -1,13 +1,13 @@
 function mostrarReporte(reporte) {
   const contenedor = document.getElementById('contenedor-reporte');
+  if (!contenedor) return;
 
   const detalleAsignaciones = (reporte.detalleAsignacionesBloques || []).map(a => `
     <tr>
       <td>${a.salon || ''}</td>
       <td>${a.dia || ''}</td>
-      <td>${a.bloque || ''}</td>
-      <td>${a.grupo || ''}</td>
       <td>${a.horario || ''}</td>
+      <td>${a.grupo || ''}</td>
       <td>${a.asignaturas || ''}</td>
     </tr>
   `).join('');
@@ -16,6 +16,7 @@ function mostrarReporte(reporte) {
     <tr>
       <td>${c.clase}</td>
       <td>${c.grupo}</td>
+      <td>${c.tipo}</td>
       <td>${c.semestre}° (${c.carrera})</td>
       <td>${c.mensaje}</td>
     </tr>
@@ -37,13 +38,24 @@ function mostrarReporte(reporte) {
     </tr>
   `).join('');
 
+  const detalleGruposDivididos = (reporte.detalleGruposDivididos || []).map(g => `
+    <tr>
+      <td>${g.grupo}</td>
+      <td>${g.salon1} (${g.edificio1}-${g.piso1})</td>
+      <td>${g.salon2} (${g.edificio2}-${g.piso2})</td>
+      <td>${g.dias1}</td>
+      <td>${g.dias2}</td>
+      <td>${g.distancia}</td>
+    </tr>
+  `).join('');
+
   contenedor.innerHTML = `
     <h3>Reporte de Asignación por Bloques</h3>
     <div class="resumen">
-      <p>Total de clases: ${reporte.totalClases}</p>
-      <p>Clases asignadas: ${reporte.asignadas}</p>
-      <p>Clases de laboratorio: ${reporte.clasesLaboratorio}</p>
-      <p>Errores: ${reporte.errores}</p>
+      <p>Total de clases: ${reporte.resumen.totalClases}</p>
+      <p>Clases asignadas: ${reporte.resumen.asignadas}</p>
+      <p>Clases de laboratorio: ${reporte.resumen.clasesLaboratorio}</p>
+      <p>Errores: ${reporte.resumen.errores}</p>
     </div>
 
     <div class="tabs">
@@ -51,6 +63,7 @@ function mostrarReporte(reporte) {
       <button class="tab-btn" data-tab="laboratorio">Laboratorio</button>
       <button class="tab-btn" data-tab="virtuales">Virtuales</button>
       <button class="tab-btn" data-tab="errores">Errores</button>
+      ${reporte.detalleGruposDivididos && reporte.detalleGruposDivididos.length > 0 ? '<button class="tab-btn" data-tab="divididos">Grupos Divididos</button>' : ''}
     </div>
 
     <div class="tab-content active" id="asignaciones">
@@ -59,9 +72,8 @@ function mostrarReporte(reporte) {
           <tr>
             <th>Salón</th>
             <th>Día</th>
-            <th>Bloque</th>
-            <th>Grupo</th>
             <th>Horario</th>
+            <th>Grupo</th>
             <th>Asignaturas</th>
           </tr>
         </thead>
@@ -75,8 +87,9 @@ function mostrarReporte(reporte) {
           <tr>
             <th>Asignatura</th>
             <th>Grupo</th>
+            <th>Tipo</th>
             <th>Semestre (Carrera)</th>
-            <th>Estado</th>
+            <th>Horario</th>
           </tr>
         </thead>
         <tbody>${detalleLaboratorio}</tbody>
@@ -108,6 +121,24 @@ function mostrarReporte(reporte) {
         <tbody>${detalleErrores}</tbody>
       </table>
     </div>
+
+    ${reporte.detalleGruposDivididos && reporte.detalleGruposDivididos.length > 0 ? `
+    <div class="tab-content" id="divididos">
+      <table>
+        <thead>
+          <tr>
+            <th>Grupo</th>
+            <th>Salón 1</th>
+            <th>Salón 2</th>
+            <th>Días Salón 1</th>
+            <th>Días Salón 2</th>
+            <th>Proximidad</th>
+          </tr>
+        </thead>
+        <tbody>${detalleGruposDivididos}</tbody>
+      </table>
+    </div>
+    ` : ''}
   `;
 
   // Configurar tabs

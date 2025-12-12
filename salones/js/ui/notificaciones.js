@@ -5,6 +5,7 @@
  */
 function mostrarNotificacion(mensaje, tipo = 'info') {
   const contenedor = document.getElementById('contenedor-notificaciones');
+  if (!contenedor) return;
   const notificacion = document.createElement('div');
   notificacion.className = `notificacion notificacion-${tipo}`;
   notificacion.textContent = mensaje;

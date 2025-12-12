@@ -4,26 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Asignación de Salones</title>
-    <link rel="stylesheet" href="css/sytle.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <header class="header">
-        <h1>Sistema de Asignación Automática de Salones</h1>
-        <p>Procesamiento de horarios y asignación inteligente de espacios</p>
+        <div class="header-content">
+            <div class="logo-section">
+                <i class="fas fa-building"></i>
+                <h1>Sistema de Asignación Automática de Salones</h1>
+            </div>
+            <p>Procesamiento de horarios y asignación inteligente de espacios</p>
+        </div>
     </header>
 
     <main class="main-content">
         <!-- Sección de carga de archivos -->
         <section class="file-upload-section">
             <div class="section-header">
-                <h2>Carga de Archivos CSV</h2>
+                <h2><i class="fas fa-file-csv"></i> Carga de Archivos CSV</h2>
                 <p>Selecciona exactamente 5 archivos CSV, uno por cada carrera</p>
             </div>
             <div class="file-upload-controls">
-                <input type="file" id="input-archivos" multiple accept=".csv" class="file-input">
+                <div class="file-upload-area" id="file-drop-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Arrastra y suelta los archivos aquí o haz clic para seleccionar</p>
+                    <input type="file" id="input-archivos" multiple accept=".csv" class="file-input">
+                    <div id="file-list" class="file-list"></div>
+                </div>
                 <button id="btn-procesar" class="btn btn-primary">
-                    Procesar Archivos y Asignar Salones
-                    <span class="btn-icon">🔍</span>
+                    <i class="fas fa-cogs"></i> Procesar Archivos y Asignar Salones
                 </button>
                 <p class="help-text">Después del procesamiento, podrá buscar y seleccionar grupos prioritarios para asignación en el piso 1</p>
             </div>
@@ -33,38 +43,151 @@
         <div id="indicador-carga" class="loading-indicator">
             <div class="spinner"></div>
             <p>Procesando archivos y asignando salones...</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
         </div>
 
         <!-- Contenedor de notificaciones -->
         <div id="contenedor-notificaciones" class="notifications-container"></div>
 
-        <!-- Sección de reporte -->
-        <section class="report-section">
-            <div class="section-header">
-                <h2>Reporte de Asignación</h2>
-            </div>
-            <div id="contenedor-reporte" class="report-container"></div>
-        </section>
-
         <!-- Sección de visualización de salones -->
         <section class="visualization-section">
             <div class="section-header">
-                <h2>Visualización de Salones</h2>
+                <h2><i class="fas fa-th"></i> Visualización de Salones</h2>
                 <div class="view-controls">
+                    <div class="filter-controls">
+                        <select id="filtro-piso" class="filter-select">
+                            <option value="all">Todos los pisos</option>
+                            <option value="1">Piso 1</option>
+                            <option value="2">Piso 2</option>
+                            <option value="3">Piso 3</option>
+                            <option value="4">Piso 4</option>
+                        </select>
+                        <select id="filtro-edificio" class="filter-select">
+                            <option value="all">Todos los edificios</option>
+                            <option value="D">Edificio D</option>
+                            <option value="E">Edificio E</option>
+                            <option value="F">Edificio F</option>
+                        </select>
+                    </div>
                     <div class="search-salon-wrapper">
                         <input type="text" id="buscador-salon" class="search-salon-input" placeholder="Buscar grupo en salones...">
-                        <div class="search-salon-icon">🔍</div>
+                        <i class="fas fa-search search-salon-icon"></i>
                     </div>
                 </div>
             </div>
-            <div id="contenedor-salones" class="salons-container"></div>
+            
+            <!-- Vista de piso -->
+            <div class="floor-view-container">
+                <div class="floor-selector">
+                    <button class="floor-btn active" data-floor="1">Piso 1</button>
+                    <button class="floor-btn" data-floor="2">Piso 2</button>
+                    <button class="floor-btn" data-floor="3">Piso 3</button>
+                    <button class="floor-btn" data-floor="4">Piso 4</button>
+                </div>
+                
+                <div class="floor-map" id="floor-map">
+                    <!-- El mapa del piso se generará dinámicamente -->
+                </div>
+            </div>
+            
+            <!-- Vista de lista -->
+            <div id="contenedor-salones" class="salons-container">
+                <!-- Los salones se mostrarán aquí -->
+            </div>
+        </section>
+
+        <!-- Sección de reporte -->
+        <section class="report-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> Reporte de Asignación</h2>
+                <div class="report-controls">
+                    <button id="btn-exportar-reporte" class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Exportar Reporte
+                    </button>
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="table"><i class="fas fa-table"></i></button>
+                        <button class="view-btn" data-view="cards"><i class="fas fa-th-large"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div id="contenedor-reporte" class="report-container">
+                <!-- Tabla de resumen -->
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-door-open"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Salones Utilizados</h3>
+                            <p class="card-value" id="total-salones">0</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Grupos Asignados</h3>
+                            <p class="card-value" id="total-grupos">0</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Ocupación</h3>
+                            <p class="card-value" id="porcentaje-ocupacion">0%</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Conflictos</h3>
+                            <p class="card-value" id="total-conflictos">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contenido del reporte -->
+                <div class="report-content">
+                    <!-- Tabla de asignación -->
+                    <div class="table-container">
+                        <table class="assignment-table" id="tabla-asignacion">
+                            <thead>
+                                <tr>
+                                    <th>Grupo</th>
+                                    <th>Materia</th>
+                                    <th>Salón</th>
+                                    <th>Piso</th>
+                                    <th>Horario</th>
+                                    <th>Días</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-asignacion-body">
+                                <!-- Las filas se agregarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Vista de tarjetas (inicialmente oculta) -->
+                    <div class="cards-view" id="cards-view" style="display: none;">
+                        <!-- Las tarjetas se agregarán dinámicamente -->
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Modal para selección de grupo prioritario -->
         <div id="modal-grupo-prioritario" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Seleccionar Grupos Prioritarios</h3>
+                    <h3><i class="fas fa-star"></i> Seleccionar Grupos Prioritarios</h3>
                     <span class="modal-close">&times;</span>
                 </div>
                 <div class="modal-body">
@@ -81,7 +204,7 @@
                     <div class="search-container">
                         <div class="search-input-wrapper">
                             <input type="text" id="buscador-grupos" class="search-input" placeholder="Buscar grupo...">
-                            <div class="search-icon">🔍</div>
+                            <i class="fas fa-search search-icon"></i>
                         </div>
                     </div>
                     <div id="grupos-prioritarios-container" class="grupos-container">
@@ -89,15 +212,25 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="btn-confirmar-prioridad" class="btn btn-primary">Guardar Grupos Prioritarios y Asignar</button>
-                    <button id="btn-cancelar-prioridad" class="btn btn-secondary">Cancelar</button>
+                    <button id="btn-confirmar-prioridad" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar Grupos Prioritarios y Asignar
+                    </button>
+                    <button id="btn-cancelar-prioridad" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
                 </div>
             </div>
         </div>
     </main>
 
     <footer class="footer">
-        <p>Sistema desarrollado para la gestión automática de asignación de salones universitarios</p>
+        <div class="footer-content">
+            <p>Sistema desarrollado para la gestión automática de asignación de salones universitarios</p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contacto</a>
+            </div>
+        </div>
     </footer>
 
     <!-- Scripts -->

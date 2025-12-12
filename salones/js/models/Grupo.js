@@ -6,7 +6,9 @@ class Grupo {
     this.numero = numero; // 1-9
     this.cantidadAlumnos = cantidadAlumnos;
     this.tieneDiscapacidad = tieneDiscapacidad;
+    this.salonAsignado = null;
   }
 }
 
 export default Grupo;
+

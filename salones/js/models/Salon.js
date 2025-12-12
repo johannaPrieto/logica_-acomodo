@@ -9,10 +9,10 @@ class Salon {
     this.asignacionesBloques = []; // Array de asignaciones por bloque
   }
 
-  // Verificar si el salón está disponible en un horario
-  estaDisponible(horario) {
-    return !this.horariosOcupados.some(h => 
-      this.horariosSeSuperponen(h, horario)
+  // Verificar si el salón está disponible en un horario y día
+  estaDisponible(horario, dia) {
+    return !this.horariosOcupados.some(h =>
+      h.dia === dia && this.horariosSeSuperponen(h.horario, horario)
     );
   }
 
@@ -33,13 +33,54 @@ class Salon {
   }
 
   // Agregar horario ocupado
-  agregarHorarioOcupado(horario) {
-    this.horariosOcupados.push(horario);
+  agregarHorarioOcupado(dia, horario, grupoId) {
+    // Verificar si ya existe un horario idéntico para evitar duplicados
+    const existe = this.horariosOcupados.some(h =>
+      h.dia === dia &&
+      h.horario.horaInicio === horario.horaInicio &&
+      h.horario.horaFin === horario.horaFin
+    );
+    if (!existe) {
+      this.horariosOcupados.push({ dia, horario, grupoId });
+    }
   }
 
   // Agregar asignación por bloque
   agregarAsignacionBloque(asignacion) {
-    this.asignacionesBloques.push(asignacion);
+    // Verificar si ya existe una asignación idéntica para evitar duplicados
+    const existe = this.asignacionesBloques.some(asig =>
+      asig.grupoId === asignacion.grupoId &&
+      asig.dia === asignacion.dia &&
+      asig.bloque === asignacion.bloque &&
+      asig.horario.horaInicio === asignacion.horario.horaInicio &&
+      asig.horario.horaFin === asignacion.horario.horaFin
+    );
+    if (!existe) {
+      this.asignacionesBloques.push(asignacion);
+    }
+  }
+
+  // Ocupar el salón en un día y horario específico para un grupo
+  ocupar(dia, horario, grupoId) {
+    // Agregar el horario a la lista de horarios ocupados
+    this.agregarHorarioOcupado(dia, horario, grupoId);
+
+    // Agregar la asignación por bloque
+    this.agregarAsignacionBloque({
+      grupoId: grupoId,
+      dia: dia,
+      horario: horario,
+      bloque: 'Asignado' // O algún nombre apropiado
+    });
+  }
+
+  // Liberar todos los horarios ocupados por un grupo específico
+  liberarHorarios(grupoId) {
+    // Remover horarios ocupados del grupo
+    this.horariosOcupados = this.horariosOcupados.filter(h => h.grupoId !== grupoId);
+
+    // Remover asignaciones de bloques del grupo
+    this.asignacionesBloques = this.asignacionesBloques.filter(asig => asig.grupoId !== grupoId);
   }
 }
 

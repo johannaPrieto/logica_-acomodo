@@ -87,7 +87,7 @@ id_unico,codigo_asignatura,nombre_asignatura,maestro,edificio,salon,capacidad,gr
 86,41584,Introducción a los estados financieros,ROMERO FONSECA OLIVIA ARACELI,3,,38,234,MIÉRCOLES,18:00,19:00,60,Presencial,C
 87,41584,Introducción a los estados financieros,ROMERO FONSECA OLIVIA ARACELI,3,,38,234,LUNES,18:00,20:00,120,Presencial,C
 88,41584,Introducción a los estados financieros,ROMERO FONSECA OLIVIA ARACELI,3,,38,234,MARTES,18:00,20:00,120,Presencial,C
-89,39020,Técnicas de Negociación,ZAYAS MARQUEZ CAROLINA,VI,,38,VIR,SÁBADO,10:00,11:00,60,Virtual,C
+89,39020,Técnicas de Negociación,ZAYAS MARQUEZ CAROLINA,VI,,,VIR,SÁBADO,10:00,11:00,60,Virtual,C
 90,39020,Técnicas de Negociación,ZAYAS MARQUEZ CAROLINA,4,,38,241,MARTES,11:00,12:00,60,Presencial,C
 91,39020,Técnicas de Negociación,ZAYAS MARQUEZ CAROLINA,4,,38,241,VIERNES,11:00,12:00,60,Presencial,C
 92,39020,Técnicas de Negociación,ZAYAS MARQUEZ CAROLINA,VI,,38,VIR,VIERNES,12:00,13:00,60,Virtual,C

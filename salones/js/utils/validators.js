@@ -12,6 +12,15 @@ export const ERRORES = {
   PERMISO: "PERMISO: No tiene permisos para realizar esta acción"
 };
 
+// Logger simple para el sistema
+export const logger = {
+  log(level, message) {
+    const timestamp = new Date().toISOString();
+    const logMessage = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
+    console.log(logMessage);
+  }
+};
+
 /**
  * Valida si un salón es adecuado para un grupo
  * @param {Salon} salon - Salón a validar

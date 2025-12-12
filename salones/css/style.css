@@ -438,7 +438,7 @@ tbody tr:hover {
 
 .edificio-salones {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
     gap: 1rem;
 }
 
@@ -461,7 +461,7 @@ tbody tr:hover {
 .salon {
     border: 2px solid var(--gray-200);
     border-radius: var(--border-radius);
-    padding: 1rem;
+    padding: 0.75rem;
     background: white;
     transition: all 0.3s ease;
     cursor: pointer;
@@ -486,20 +486,20 @@ tbody tr:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--gray-200);
 }
 
 .salon-id {
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--gray-900);
 }
 
 .salon-capacidad {
     color: var(--gray-600);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .salon-accesible {
@@ -508,21 +508,21 @@ tbody tr:hover {
 }
 
 .salon-content {
-    min-height: 100px;
+    min-height: 60px;
 }
 
 .sin-asignaciones {
     color: var(--gray-500);
     font-style: italic;
     text-align: center;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .horario-asignado, .bloque-asignacion {
     background: var(--gray-50);
-    padding: 0.75rem;
+    padding: 0.5rem;
     border-radius: var(--border-radius);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
     border-left: 4px solid var(--primary-color);
 }
 
@@ -537,7 +537,7 @@ tbody tr:hover {
 }
 
 .horario-detalles, .bloque-horario, .bloque-grupo, .bloque-horas {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--gray-600);
 }
 
@@ -764,4 +764,265 @@ tbody tr:hover {
     cursor: pointer;
     font-weight: 500;
     color: var(--gray-900);
+}
+
+/* Calendario de salones */
+.tabla-calendario {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+}
+
+.tabla-calendario th, .tabla-calendario td {
+    padding: 0.25rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.tabla-calendario th {
+    background: var(--gray-50);
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.dia-calendario {
+    margin-bottom: 1.5rem;
+}
+
+.dia-calendario h4 {
+    margin-bottom: 0.5rem;
+    color: var(--gray-900);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Grupos divididos */
+.grupos-divididos-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border: 2px solid var(--warning-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.grupos-divididos-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--warning-color);
+}
+
+.grupos-divididos-header h3 {
+    color: var(--warning-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.grupos-divididos-subtitle {
+    color: var(--gray-700);
+    font-size: 1rem;
+    margin: 0;
+    font-style: italic;
+}
+
+.grupos-divididos-lista {
+    display: grid;
+    gap: 1rem;
+}
+
+.grupo-dividido-item {
+    background: white;
+    border: 2px solid var(--warning-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.grupo-dividido-item:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.grupo-dividido-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.grupo-id {
+    background: var(--warning-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.division-arrow {
+    color: var(--warning-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.salones-division {
+    background: var(--info-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.grupo-dividido-detalles {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.salon-detalle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--warning-color);
+}
+
+.salon-nombre {
+    font-weight: 700;
+    color: var(--warning-color);
+    min-width: 60px;
+    font-size: 1rem;
+}
+
+.salon-dias {
+    color: var(--gray-700);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.sin-grupos-divididos {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 2px solid var(--success-color);
+    border-radius: var(--border-radius);
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.mensaje-acomodo-inicial {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid var(--warning-color);
+    border-radius: var(--border-radius);
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    animation: pulse 2s infinite;
+}
+
+.mensaje-acomodo-inicial .mensaje-content i {
+    font-size: 3rem;
+    color: var(--warning-color);
+    margin-bottom: 1rem;
+    animation: spin 2s linear infinite;
+}
+
+.mensaje-acomodo-inicial .mensaje-content h3 {
+    color: var(--warning-color);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.mensaje-acomodo-inicial .mensaje-content p {
+    color: var(--gray-700);
+    font-size: 1.1rem;
+    margin: 0;
+    font-style: italic;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.mensaje-content i {
+    font-size: 3rem;
+    color: var(--success-color);
+    margin-bottom: 1rem;
+}
+
+.mensaje-content h3 {
+    color: var(--success-color);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.mensaje-content p {
+    color: var(--gray-700);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Responsive para grupos divididos */
+@media (max-width: 768px) {
+    .grupo-dividido-header {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .salon-detalle {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .grupos-divididos-header h3 {
+        font-size: 1.3rem;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .sin-grupos-divididos {
+        padding: 2rem 1rem;
+    }
+    
+    .mensaje-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .mensaje-acomodo-inicial {
+        padding: 2rem 1rem;
+    }
+    
+    .mensaje-acomodo-inicial .mensaje-content h3 {
+        font-size: 1.5rem;
+    }
 }

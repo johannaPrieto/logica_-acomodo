@@ -196,14 +196,20 @@ function mostrarModalGrupoPrioritario() {
       const mensajePrioritarios = gruposPrioritarios.length > 0
         ? ` Grupos prioritarios (1er piso obligatorio): ${gruposPrioritarios.join(', ')}.`
         : '';
-      mostrarNotificacion(`Procesamiento completado. ${sistemaProcesado.asignaciones.length} clases asignadas. ${sistemaProcesado.clasesLaboratorio.length} clases de laboratorio excluidas.${mensajePrioritarios}`, 'exito');
+      const mensajeDivididos = asignador.gruposDivididos.size > 0
+        ? ` ${asignador.gruposDivididos.size} grupo(s) dividido(s) en dos salones.`
+        : '';
+      mostrarNotificacion(`Procesamiento completado. ${sistemaProcesado.asignaciones.length} clases asignadas. ${sistemaProcesado.clasesLaboratorio.length} clases de laboratorio excluidas.${mensajePrioritarios}${mensajeDivididos}`, 'exito');
 
       // Generar y mostrar reporte
-      const reporte = sistemaProcesado.generarReporte();
+      const reporte = sistemaProcesado.generarReporte(asignador.gruposDivididos);
       mostrarReporte(reporte);
 
       // Actualizar visualización de salones
-      mostrarSalonesEnInterfaz(sistemaProcesado.salones);
+      mostrarSalonesEnInterfaz(sistemaProcesado.salones, asignador.gruposDivididos);
+
+      // Poblar tabla de asignación
+      poblarTablaAsignacion(sistemaProcesado.asignaciones);
 
     } catch (error) {
       mostrarNotificacion(`Error en asignación: ${error.message}`, 'error');
@@ -294,8 +300,8 @@ function buscarSalonPorGrupo() {
   let salonesNoEncontrados = [];
 
   salones.forEach(salon => {
-    const gruposEnSalon = Array.from(salon.querySelectorAll('.bloque-grupo')).map(el =>
-      el.textContent.replace('Grupo ', '').toLowerCase()
+    const gruposEnSalon = Array.from(salon.querySelectorAll('.tabla-calendario td')).map(el =>
+      el.textContent.toLowerCase()
     );
 
     const contieneGrupo = gruposEnSalon.some(grupo => grupo.includes(grupoBuscado));
@@ -339,6 +345,74 @@ function buscarSalonPorGrupo() {
   } else {
     mostrarNotificacion(`Se encontraron ${salonesEncontrados.length} salón(es) con el grupo "${buscador.value.trim()}"`, 'info');
   }
+}
+
+// Función para poblar la tabla de asignación
+function poblarTablaAsignacion(asignaciones) {
+  const tbody = document.getElementById('tabla-asignacion-body');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  // Ordenar asignaciones por grupo, día, hora
+  asignaciones.sort((a, b) => {
+    if (a.clase.grupoId !== b.clase.grupoId) return a.clase.grupoId.localeCompare(b.clase.grupoId);
+    if (a.clase.diaSemana !== b.clase.diaSemana) {
+      const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+      return dias.indexOf(a.clase.diaSemana) - dias.indexOf(b.clase.diaSemana);
+    }
+    return a.clase.horaInicio.localeCompare(b.clase.horaInicio);
+  });
+
+  asignaciones.forEach(asignacion => {
+    const tr = document.createElement('tr');
+
+    const grupoTd = document.createElement('td');
+    grupoTd.textContent = asignacion.clase.grupoId;
+    tr.appendChild(grupoTd);
+
+    const materiaTd = document.createElement('td');
+    materiaTd.textContent = asignacion.clase.nombreAsignatura;
+    tr.appendChild(materiaTd);
+
+    const salonTd = document.createElement('td');
+    if (asignacion.salon) {
+      salonTd.textContent = asignacion.salon.id;
+    } else {
+      salonTd.textContent = asignacion.mensaje;
+      salonTd.style.fontStyle = 'italic';
+      salonTd.style.color = '#666';
+    }
+    tr.appendChild(salonTd);
+
+    const pisoTd = document.createElement('td');
+    pisoTd.textContent = asignacion.salon ? asignacion.salon.piso : '-';
+    tr.appendChild(pisoTd);
+
+    const horarioTd = document.createElement('td');
+    horarioTd.textContent = `${asignacion.clase.horaInicio} - ${asignacion.clase.horaFin}`;
+    tr.appendChild(horarioTd);
+
+    const diasTd = document.createElement('td');
+    diasTd.textContent = asignacion.clase.diaSemana;
+    tr.appendChild(diasTd);
+
+    const estadoTd = document.createElement('td');
+    estadoTd.textContent = asignacion.salon ? 'Asignado' : 'Laboratorio';
+    estadoTd.className = asignacion.salon ? 'estado-asignado' : 'estado-laboratorio';
+    tr.appendChild(estadoTd);
+
+    tbody.appendChild(tr);
+  });
+
+  // Actualizar contadores
+  const totalSalones = new Set(asignaciones.filter(a => a.salon).map(a => a.salon.id)).size;
+  const totalGrupos = new Set(asignaciones.map(a => a.clase.grupoId)).size;
+  const totalConflictos = asignaciones.filter(a => !a.salon).length;
+
+  document.getElementById('total-salones').textContent = totalSalones;
+  document.getElementById('total-grupos').textContent = totalGrupos;
+  document.getElementById('total-conflictos').textContent = totalConflictos;
+  document.getElementById('porcentaje-ocupacion').textContent = 'N/A'; // Calcular si es necesario
 }
 
 // Inicializar cuando el DOM esté listo
