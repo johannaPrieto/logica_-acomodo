@@ -426,7 +426,12 @@ tbody tr:hover {
 }
 
 .edificio {
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
+    padding: 2rem;
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    border: 2px solid var(--gray-200);
+    box-shadow: var(--shadow);
 }
 
 .edificio h3 {
@@ -434,6 +439,17 @@ tbody tr:hover {
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-top: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 .edificio-salones {
@@ -1024,5 +1040,20 @@ tbody tr:hover {
     
     .mensaje-acomodo-inicial .mensaje-content h3 {
         font-size: 1.5rem;
+    }
+    
+    .edificio h3 {
+        font-size: 2rem;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .edificio {
+        margin-bottom: 2rem;
+        padding: 1rem;
+    }
+    
+    .edificio-salones {
+        grid-template-columns: 1fr;
     }
 }
