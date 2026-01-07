@@ -11,4 +11,3 @@ class Grupo {
 }
 
 export default Grupo;
-
